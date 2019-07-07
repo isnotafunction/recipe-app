@@ -6,15 +6,14 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, \
 
 
 class UserManager(BaseUserManager):
-
     def create_user(self, email, password=None, **extra_fields):
         """creates and saves a new user"""
         if not email:
             raise ValueError("Email is required")
-        user = self.model(email=self.normalize_email(email), **extra_fields)
+        email = self.normalize_email(email)
+        user = self.model(email=email, **extra_fields)
         user.set_password(password)
         user.save(using=self._db)
-
         return user
 
     def create_superuser(self, email, password):
@@ -23,7 +22,6 @@ class UserManager(BaseUserManager):
         user.is_staff = True
         user.is_superuser = True
         user.save()
-
         return user
 
 
